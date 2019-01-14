@@ -68,7 +68,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
     //Options
     open var onForegroundAction = HidingNavigationForegroundAction.default
     
-    public init(viewController: UIViewController, scrollView: UIScrollView){
+    @objc public init(viewController: UIViewController, scrollView: UIScrollView){
         if viewController.navigationController == nil || viewController.navigationController?.navigationBar == nil {
             fatalError("ViewController must be within a UINavigationController")
         }
