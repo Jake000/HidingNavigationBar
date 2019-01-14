@@ -118,6 +118,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
     
     @objc func applicationDidChangeStatusBarFrame() {
         expand()
+        updateContentInsets()
     }
     
     deinit {
