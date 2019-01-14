@@ -111,6 +111,13 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground),
                                                name: UIApplication.didBecomeActiveNotification, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeStatusBarFrame),
+                                               name: UIDevice.orientationDidChangeNotification, object: nil)
+        
+    }
+    
+    @objc func applicationDidChangeStatusBarFrame() {
+        expand()
     }
     
     deinit {
