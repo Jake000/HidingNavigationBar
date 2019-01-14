@@ -16,16 +16,6 @@ class HidingNavViewController: UIViewController, UITableViewDataSource, UITableV
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 11.0, *) {
-            self.navigationController?.navigationBar.prefersLargeTitles = true
-        } else {
-            // Fallback on earlier versions
-        }
-        if #available(iOS 11.0, *) {
-            self.navigationController?.navigationItem.largeTitleDisplayMode = .always
-        } else {
-            // Fallback on earlier versions
-        }
 
 		tableView = UITableView(frame: view.bounds)
 		tableView.dataSource = self

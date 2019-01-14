@@ -33,6 +33,7 @@ public protocol RefreshableControl {
 
 extension UIRefreshControl: RefreshableControl { }
 
+@objcMembers
 open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     // The view controller that is part of the navigation stack
     unowned var viewController: UIViewController
@@ -68,7 +69,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
     //Options
     open var onForegroundAction = HidingNavigationForegroundAction.default
     
-    @objc public init(viewController: UIViewController, scrollView: UIScrollView){
+    public init(viewController: UIViewController, scrollView: UIScrollView){
         if viewController.navigationController == nil || viewController.navigationController?.navigationBar == nil {
             fatalError("ViewController must be within a UINavigationController")
         }
@@ -109,6 +110,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
         
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground),
                                                name: UIApplication.didBecomeActiveNotification, object: nil)
+        
     }
     
     deinit {
@@ -146,22 +148,22 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
         updateContentInsets()
     }
     
-    open func viewWillAppear(_ animated: Bool) {
+    @objc open func viewWillAppear(_ animated: Bool) {
         expand()
     }
     
-    open func viewDidAppear(_ animated: Bool) {
+    @objc open func viewDidAppear(_ animated: Bool) {
         navBarController.startFixingTitleLabelAlpha()
     }
     
-    open func viewDidLayoutSubviews() {
+    @objc open func viewDidLayoutSubviews() {
         navBarController.updateContractsUpwardsIfNeeded()
         extensionController.updateContractsUpwardsIfNeeded()
         tabBarController?.updateContractsUpwardsIfNeeded()
         updateContentInsets()
     }
     
-    open func viewWillDisappear(_ animated: Bool) {
+    @objc open func viewWillDisappear(_ animated: Bool) {
         navBarController.stopFixingTitleLabelAlpha()
         expand()
     }
@@ -194,7 +196,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
     }
     
     @discardableResult
-    open func shouldScrollToTop() -> Bool{
+    @objc open func shouldScrollToTop() -> Bool{
         // update content Inset
         let top = statusBarHeight() + navBarController.totalHeight()
         updateScrollContentInsetTop(top)
