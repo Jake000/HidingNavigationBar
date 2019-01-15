@@ -264,7 +264,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
         let statusBarSize = UIApplication.shared.statusBarFrame.size
         let extendedStatusBarDifference = abs(viewController.view.bounds.height - (UIApplication.shared.delegate?.window??.frame.size.height ?? UIScreen.main.bounds.height))
         
-        return min(statusBarSize.width, statusBarSize.height) - extendedStatusBarDifference
+        return max(min(statusBarSize.width, statusBarSize.height) - extendedStatusBarDifference, 0)
     }
     
     fileprivate func shouldHandleScrolling() -> Bool {

@@ -58,7 +58,10 @@ class MasterViewController: UITableViewController {
 		
 		if (indexPath as NSIndexPath).row == 0 {
 			let controller = HidingNavViewController()
-			navigationController?.pushViewController(controller, animated: true)
+            let nav:UINavigationController = UINavigationController.init(rootViewController: controller)
+            nav.modalPresentationStyle = .formSheet
+            navigationController?.present(nav, animated: true, completion: nil)
+			
 		} else if (indexPath as NSIndexPath).row == 1 {
 			let controller = HidingNavExtensionViewController()
 			navigationController?.pushViewController(controller, animated: true)
