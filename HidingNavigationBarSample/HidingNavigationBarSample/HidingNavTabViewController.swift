@@ -83,7 +83,7 @@ class HidingNavTabViewController: UIViewController, UITableViewDataSource, UITab
 
         // Configure the cell...
 		cell.textLabel?.text = "row \((indexPath as NSIndexPath).row)"
-		cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
 
         return cell
     }

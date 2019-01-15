@@ -68,7 +68,7 @@ class HidingViewController {
         if let deltaConstraint = deltaConstraint {
             return deltaConstraint.constant == view.bounds.height * (contractsUpwards ? 1 : -1)
         } else {
-            return Float(fabs(view.center.y - contractedCenterValue().y)) < .ulpOfOne
+            return Float(abs(view.center.y - contractedCenterValue().y)) < .ulpOfOne
         }
     }
     
@@ -76,7 +76,7 @@ class HidingViewController {
         if let deltaConstraint = deltaConstraint {
             return deltaConstraint.constant == 0
         } else {
-            return Float(fabs(view.center.y - expandedCenterValue().y)) < .ulpOfOne
+            return Float(abs(view.center.y - expandedCenterValue().y)) < .ulpOfOne
         }
     }
     

@@ -33,6 +33,7 @@ public protocol RefreshableControl {
 
 extension UIRefreshControl: RefreshableControl { }
 
+@objcMembers
 open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     // The view controller that is part of the navigation stack
     unowned var viewController: UIViewController
@@ -108,7 +109,16 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
         updateContentInsets()
         
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground),
-                                               name: .UIApplicationDidBecomeActive, object: nil)
+                                               name: UIApplication.didBecomeActiveNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeStatusBarFrame),
+                                               name: UIDevice.orientationDidChangeNotification, object: nil)
+        
+    }
+    
+    @objc func applicationDidChangeStatusBarFrame() {
+        expand()
+        updateContentInsets()
     }
     
     deinit {
@@ -142,26 +152,26 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
         extensionController.view.addSubview(view)
         _ = extensionController.expand()
         
-        extensionController.view.superview?.bringSubview(toFront: extensionController.view)
+        extensionController.view.superview?.bringSubviewToFront(extensionController.view)
         updateContentInsets()
     }
     
-    open func viewWillAppear(_ animated: Bool) {
+    @objc open func viewWillAppear(_ animated: Bool) {
         expand()
     }
     
-    open func viewDidAppear(_ animated: Bool) {
+    @objc open func viewDidAppear(_ animated: Bool) {
         navBarController.startFixingTitleLabelAlpha()
     }
     
-    open func viewDidLayoutSubviews() {
+    @objc open func viewDidLayoutSubviews() {
         navBarController.updateContractsUpwardsIfNeeded()
         extensionController.updateContractsUpwardsIfNeeded()
         tabBarController?.updateContractsUpwardsIfNeeded()
         updateContentInsets()
     }
     
-    open func viewWillDisappear(_ animated: Bool) {
+    @objc open func viewWillDisappear(_ animated: Bool) {
         navBarController.stopFixingTitleLabelAlpha()
         expand()
     }
@@ -194,7 +204,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
     }
     
     @discardableResult
-    open func shouldScrollToTop() -> Bool{
+    @objc open func shouldScrollToTop() -> Bool{
         // update content Inset
         let top = statusBarHeight() + navBarController.totalHeight()
         updateScrollContentInsetTop(top)
@@ -252,7 +262,9 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
         }
         
         let statusBarSize = UIApplication.shared.statusBarFrame.size
-        return min(statusBarSize.width, statusBarSize.height)
+        let extendedStatusBarDifference = abs(viewController.view.bounds.height - (UIApplication.shared.delegate?.window??.frame.size.height ?? UIScreen.main.bounds.height))
+        
+        return max(min(statusBarSize.width, statusBarSize.height) - extendedStatusBarDifference, 0)
     }
     
     fileprivate func shouldHandleScrolling() -> Bool {
@@ -266,7 +278,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
             return false
         }
         
-        let scrollFrame = UIEdgeInsetsInsetRect(scrollView.bounds, scrollViewContentInset)
+        let scrollFrame = scrollView.bounds.inset(by:scrollViewContentInset)
         let scrollableAmount: CGFloat = scrollView.contentSize.height - scrollFrame.height
         let scrollViewIsSuffecientlyLong: Bool = scrollableAmount > navBarController.totalHeight() * 3
         
@@ -295,7 +307,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
             }
             
             // 3 - Update contracting variable
-            if Float(fabs(deltaY)) > .ulpOfOne {
+            if Float(abs(deltaY)) > .ulpOfOne {
                 if deltaY < 0 {
                     currentState = .contracting
                 } else {

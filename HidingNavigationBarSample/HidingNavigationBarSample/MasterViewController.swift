@@ -23,7 +23,7 @@ class MasterViewController: UITableViewController {
 	
 	func styleNavigationController(_ navigationController: UINavigationController){
 		navigationController.navigationBar.isTranslucent = true
-		navigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        navigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
 		navigationController.navigationBar.tintColor = UIColor.white
 		navigationController.navigationBar.barTintColor = UIColor(red: 41/255, green: 141/255, blue: 250/255, alpha: 1)
 	}
@@ -58,7 +58,10 @@ class MasterViewController: UITableViewController {
 		
 		if (indexPath as NSIndexPath).row == 0 {
 			let controller = HidingNavViewController()
-			navigationController?.pushViewController(controller, animated: true)
+            let nav:UINavigationController = UINavigationController.init(rootViewController: controller)
+            nav.modalPresentationStyle = .formSheet
+            navigationController?.present(nav, animated: true, completion: nil)
+			
 		} else if (indexPath as NSIndexPath).row == 1 {
 			let controller = HidingNavExtensionViewController()
 			navigationController?.pushViewController(controller, animated: true)
